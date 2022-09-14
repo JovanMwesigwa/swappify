@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react'
 import { ethers } from 'ethers'
 import { Navbar, SwapTab } from '../components'
 import { getUniBalance, getWethBalance } from '../utils'
-import { getEstimatedPrice } from '../services/AlphaRouter'
+import { getEstimatedPrice, makeSwap } from '../services/AlphaRouter'
 
 const Home: NextPage = () => {
   const [provider, setProvider] = useState<any>(undefined)
@@ -21,8 +21,10 @@ const Home: NextPage = () => {
 
   const [tokenFromAmountEntered, setTokenFromAmountEntered] = useState<any>(0.0)
   const [tokenToAmountEntered, setTokenToAmountEntered] = useState<any>(0.0)
+  const [gasEstimate, setGasEstimate] = useState<any>(0.0)
 
   const [estimatedValue, setEstimatedValue] = useState<Number | undefined>()
+  const [route, setRoute] = useState<any>({})
 
   useEffect(() => {
     const onLoad = async () => {
@@ -68,6 +70,11 @@ const Home: NextPage = () => {
       signerAddress
     )
 
+    setGasEstimate(response?.quoteGasAdjusted.toFixed(6))
+    setEstimatedValue(response?.quote.toFixed(6))
+
+    setRoute(response)
+
     setError(response)
     setLoading(false)
   }
@@ -75,6 +82,15 @@ const Home: NextPage = () => {
   const disconnect = () => {
     setSigner({})
     setSignerAddress('')
+  }
+
+  const clear = () => {
+    setEstimatedValue(0)
+    setGasEstimate(0)
+  }
+
+  const swap = async () => {
+    await makeSwap(route, signer)
   }
 
   return (
@@ -90,7 +106,7 @@ const Home: NextPage = () => {
         disconnect={disconnect}
       />
 
-      <div className="flex flex-1 items-center justify-center">
+      <div className="flex flex-1 items-center md:justify-center">
         <SwapTab
           loading={loading}
           setLoading={setLoading}
@@ -99,8 +115,11 @@ const Home: NextPage = () => {
           setTokenFromAmountEntered={setTokenFromAmountEntered}
           fromValue={tokenFromAmountEntered}
           estimatedValue={estimatedValue}
-          // setEstimatedValue={setEstimatedValue}
+          setEstimatedValue={setEstimatedValue}
+          clear={clear}
+          gasEstimate={gasEstimate}
           findEstimate={findEstimate}
+          swap={swap}
         />
       </div>
       <h4 className="text-sm text-center p-4 bg-pink-100 my-6">

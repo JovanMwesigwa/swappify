@@ -5,8 +5,12 @@ interface Props {
   tokenToBalance: String | undefined | Number
   setTokenFromAmountEntered: any
   fromValue: any
-  estimatedValue: Number | undefined
+  estimatedValue: any
   findEstimate: any
+  gasEstimate: any
+  setEstimatedValue: any
+  clear: any
+  swap: any
 }
 
 const SwapTab: React.FC<Props> = ({
@@ -18,6 +22,9 @@ const SwapTab: React.FC<Props> = ({
   fromValue,
   estimatedValue,
   findEstimate,
+  gasEstimate,
+  swap,
+  clear,
 }) => {
   return (
     <div className="h-1/2 w-1/3 bg-white p-8 rounded-lg shadow-sm">
@@ -33,6 +40,7 @@ const SwapTab: React.FC<Props> = ({
             className="bg-blue-50 rounded-md p-2 w-full outline-none px-4"
             value={fromValue}
             onChange={(e) => setTokenFromAmountEntered(e.target.value)}
+            onFocus={clear}
           />
           <div className="px-10">
             <h1 className="text-xl font-medium">WETH</h1>
@@ -51,16 +59,22 @@ const SwapTab: React.FC<Props> = ({
               <input
                 placeholder="0.0"
                 className="bg-blue-50 rounded-md p-2 w-full outline-none px-4"
+                value={estimatedValue && estimatedValue}
+                readOnly={true}
               />
               <div className="px-10">
                 <h1 className="text-xl font-medium">UNI</h1>
-                <p className="text-xs">
+                {/* <p className="text-xs">
                   <>{tokenToBalance ? tokenToBalance : 0.0}</>
+                </p> */}
+                <p className="text-xs">
+                  <>{estimatedValue ? estimatedValue : 0.0}</>
                 </p>
               </div>
             </>
           )}
         </div>
+        {gasEstimate > 0 && <p className="text-xs">Gas: {gasEstimate} USD</p>}
         {!estimatedValue ? (
           <button
             onClick={findEstimate}
@@ -69,7 +83,10 @@ const SwapTab: React.FC<Props> = ({
             <h1 className="text-center text-pink-700">Estimate</h1>
           </button>
         ) : (
-          <button className="flex flex-row items-center my-3 justify-center w-full py-3 bg-pink-700 rounded-md">
+          <button
+            onClick={swap}
+            className="flex flex-row items-center my-3 justify-center w-full py-3 bg-pink-700 rounded-md"
+          >
             <h1 className="text-center text-white">Swap</h1>
           </button>
         )}
