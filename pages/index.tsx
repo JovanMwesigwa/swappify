@@ -2,7 +2,7 @@ import type { NextPage } from 'next'
 import Head from 'next/head'
 import { useEffect, useState } from 'react'
 import { ethers } from 'ethers'
-import { Navbar, SwapTab } from '../components'
+import { Modal, Navbar, SwapTab } from '../components'
 import { getUniBalance, getWethBalance } from '../utils'
 import { getEstimatedPrice, makeSwap } from '../services/AlphaRouter'
 
@@ -22,6 +22,7 @@ const Home: NextPage = () => {
   const [tokenFromAmountEntered, setTokenFromAmountEntered] = useState<any>(0.0)
   const [tokenToAmountEntered, setTokenToAmountEntered] = useState<any>(0.0)
   const [gasEstimate, setGasEstimate] = useState<any>(0.0)
+  const [showModal, setShowModal] = useState<boolean>(false)
 
   const [estimatedValue, setEstimatedValue] = useState<Number | undefined>()
   const [route, setRoute] = useState<any>({})
@@ -106,7 +107,9 @@ const Home: NextPage = () => {
         disconnect={disconnect}
       />
 
-      <div className="flex flex-1 items-center md:justify-center">
+      <Modal showModal={showModal} setShowModal={setShowModal} />
+
+      <div className="flex flex-1 items-center justify-center">
         <SwapTab
           loading={loading}
           setLoading={setLoading}
@@ -116,6 +119,7 @@ const Home: NextPage = () => {
           fromValue={tokenFromAmountEntered}
           estimatedValue={estimatedValue}
           setEstimatedValue={setEstimatedValue}
+          setShowModal={setShowModal}
           clear={clear}
           gasEstimate={gasEstimate}
           findEstimate={findEstimate}

@@ -6,7 +6,7 @@ interface Props {
 
 const Navbar: React.FC<Props> = ({ connect, signerAddress, disconnect }) => {
   return (
-    <nav className="w-full h-20 flex flex-row items-center justify-between px-20">
+    <nav className="w-full h-20 flex flex-row items-center justify-between px-4 md:px-20">
       <div className="flex flex-1">
         <h1 className="text-2xl text-pink-400">Swappify</h1>
       </div>

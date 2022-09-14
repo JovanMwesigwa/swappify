@@ -11,6 +11,7 @@ interface Props {
   setEstimatedValue: any
   clear: any
   swap: any
+  setShowModal: (take: boolean) => void
 }
 
 const SwapTab: React.FC<Props> = ({
@@ -25,9 +26,10 @@ const SwapTab: React.FC<Props> = ({
   gasEstimate,
   swap,
   clear,
+  setShowModal,
 }) => {
   return (
-    <div className="h-1/2 w-1/3 bg-white p-8 rounded-lg shadow-sm">
+    <div className="h-1/2 w-full md:w-1/3 mx-3 bg-white p-8 rounded-lg shadow-sm">
       <div className="w-full px-3 flex flex-row items-center justify-between">
         <h3 className="text-xl font-medium">Swap</h3>
         <h3 className="text-xl font-medium">Settings</h3>
@@ -42,7 +44,10 @@ const SwapTab: React.FC<Props> = ({
             onChange={(e) => setTokenFromAmountEntered(e.target.value)}
             onFocus={clear}
           />
-          <div className="px-10">
+          <div
+            onClick={() => setShowModal(true)}
+            className="px-10 cursor-pointer"
+          >
             <h1 className="text-xl font-medium">WETH</h1>
             <p className="text-xs">
               <>{tokenFromBalance ? tokenFromBalance : 0.0}</>
@@ -62,7 +67,10 @@ const SwapTab: React.FC<Props> = ({
                 value={estimatedValue && estimatedValue}
                 readOnly={true}
               />
-              <div className="px-10">
+              <div
+                onClick={() => setShowModal(true)}
+                className="px-10 cursor-pointer"
+              >
                 <h1 className="text-xl font-medium">UNI</h1>
                 {/* <p className="text-xs">
                   <>{tokenToBalance ? tokenToBalance : 0.0}</>
